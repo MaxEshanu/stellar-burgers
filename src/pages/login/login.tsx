@@ -1,22 +1,56 @@
-import { FC, SyntheticEvent, useState } from 'react';
+import React, { FC, useCallback } from 'react';
 import { LoginUI } from '@ui-pages';
+import { useDispatch, useSelector } from '../../services/store';
+import { Navigate } from 'react-router-dom';
+import {
+  getError,
+  getUserState,
+  loginUser
+} from '../../services/slices/userSlice';
 
 export const Login: FC = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [userData, setUserData] = React.useState({ email: '', password: '' });
+  const errorMessage = useSelector(getError);
+  const { isAuthenticated } = useSelector(getUserState);
+  const dispatch = useDispatch();
 
-  const handleSubmit = (e: SyntheticEvent) => {
-    e.preventDefault();
-  };
+  if (isAuthenticated) {
+    return <Navigate to='/' />;
+  }
+
+  const submitForm = useCallback(
+    (event: React.FormEvent) => {
+      event.preventDefault();
+      const { email, password } = userData;
+      if (email && password) {
+        dispatch(loginUser({ email, password }));
+      }
+    },
+    [userData, dispatch]
+  );
+
+  const setEmail = useCallback((value: React.SetStateAction<string>) => {
+    setUserData((prev) => ({
+      ...prev,
+      email: typeof value === 'function' ? value(prev.email) : value
+    }));
+  }, []);
+
+  const setPassword = useCallback((value: React.SetStateAction<string>) => {
+    setUserData((prev) => ({
+      ...prev,
+      password: typeof value === 'function' ? value(prev.password) : value
+    }));
+  }, []);
 
   return (
     <LoginUI
-      errorText=''
-      email={email}
+      errorText={errorMessage?.toString()}
+      email={userData.email}
       setEmail={setEmail}
-      password={password}
+      password={userData.password}
       setPassword={setPassword}
-      handleSubmit={handleSubmit}
+      handleSubmit={submitForm}
     />
   );
 };
