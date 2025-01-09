@@ -12,7 +12,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { deleteCookie, setCookie } from '../../utils/cookie';
 import { TOrder, TUser } from '@utils-types';
 
-type TUserState = {
+export type TUserState = {
   loading: boolean;
   error: string | null;
   response: TUser | null;
@@ -107,6 +107,7 @@ export const userSlice = createSlice({
       })
       .addCase(loginUser.pending, (state) => {
         state.loginUserRequest = true;
+        state.loading = true;
         state.error = null;
         state.isAuthChecked = true;
         state.isAuthenticated = false;
@@ -127,11 +128,13 @@ export const userSlice = createSlice({
         state.isAuthenticated = true;
         state.isAuthChecked = true;
         state.loginUserRequest = true;
+        state.loading = true;
       })
       .addCase(getUser.rejected, (state, action) => {
         state.isAuthenticated = false;
         state.isAuthChecked = false;
         state.loginUserRequest = false;
+        state.error = action.error.message as string;
       })
       .addCase(getUser.fulfilled, (state, action) => {
         state.isAuthenticated = true;
@@ -185,6 +188,7 @@ export const userSlice = createSlice({
   }
 });
 
+export { initialState as userInitialState };
 export const { userLogout, resetError } = userSlice.actions;
 export const { getUserState, getError } = userSlice.selectors;
 export default userSlice.reducer;

@@ -44,5 +44,6 @@ export const ingredientSlice = createSlice({
   }
 });
 
+export { initialState as ingredientInitialState };
 export const { getIngredientState } = ingredientSlice.selectors;
 export default ingredientSlice.reducer;

@@ -2,15 +2,15 @@ import { getFeedsApi } from '../../utils/burger-api';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { TOrder } from '@utils-types';
 
-type TFeedState = {
+export interface TFeedState {
   orders: TOrder[];
   total: number;
   totalToday: number;
   loading: boolean;
   error: string | null;
-};
+}
 
-export const initialState: TFeedState = {
+const initialState: TFeedState = {
   orders: [],
   total: 0,
   totalToday: 0,
@@ -47,5 +47,6 @@ const feedSlice = createSlice({
   }
 });
 
+export { initialState as feedInitialState };
 export const { getFeedState } = feedSlice.selectors;
 export default feedSlice.reducer;

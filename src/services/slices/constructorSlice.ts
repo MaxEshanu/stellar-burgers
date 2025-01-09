@@ -107,6 +107,7 @@ export const constructorSlice = createSlice({
   }
 });
 
+export { initialState as burgerConstructorInitialState };
 export const {
   addIngredientToConstructor,
   removeIngredient,
@@ -115,6 +116,5 @@ export const {
   setOrder,
   resetModal
 } = constructorSlice.actions;
-
 export const { getBurgerConstructorState } = constructorSlice.selectors;
 export default constructorSlice.reducer;
